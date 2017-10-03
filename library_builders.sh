@@ -61,8 +61,8 @@ function build_simple {
     fetch_unpack $url/$archive
     (cd $name_version \
         && ./configure --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch "${name}-stamp"
 }
 
@@ -76,7 +76,7 @@ function build_openblas {
     (cd OpenBLAS \
         && git checkout "v${OPENBLAS_VERSION}" \
         && make DYNAMIC_ARCH=1 USE_OPENMP=0 NUM_THREADS=64 > /dev/null \
-        && make PREFIX=$BUILD_PREFIX install)
+        && make -j4 PREFIX=$BUILD_PREFIX install)
     touch openblas-stamp
 }
 
@@ -99,8 +99,8 @@ function build_jpeg {
     fetch_unpack http://ijg.org/files/jpegsrc.v${JPEG_VERSION}.tar.gz
     (cd jpeg-${JPEG_VERSION} \
         && ./configure --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch jpeg-stamp
 }
 
@@ -114,8 +114,8 @@ function build_bzip2 {
     if [ -e bzip2-stamp ]; then return; fi
     fetch_unpack http://bzip.org/${BZIP2_VERSION}/bzip2-${BZIP2_VERSION}.tar.gz
     (cd bzip2-${BZIP2_VERSION} \
-        && make -f Makefile-libbz2_so \
-        && make install PREFIX=$BUILD_PREFIX)
+        && make -j4 -f Makefile-libbz2_so \
+        && make -j4 install PREFIX=$BUILD_PREFIX)
     touch bzip2-stamp
 }
 
@@ -147,7 +147,7 @@ function build_openjpeg {
     fetch_unpack https://github.com/uclouvain/openjpeg/archive/version.${OPENJPEG_VERSION}.tar.gz
     (cd openjpeg-version.${OPENJPEG_VERSION} \
         && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX . \
-        && make install)
+        && make -j4 install)
     touch openjpeg-stamp
 }
 
@@ -172,8 +172,8 @@ function build_libwebp {
     fetch_unpack https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${LIBWEBP_VERSION}.tar.gz
     (cd libwebp-${LIBWEBP_VERSION} && \
         ./configure --enable-libwebpmux --enable-libwebpdemux --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch libwebp-stamp
 }
 
@@ -195,8 +195,8 @@ function build_szip {
     fetch_unpack ${szip_url}/$SZIP_VERSION/src/szip-$SZIP_VERSION.tar.gz
     (cd szip-$SZIP_VERSION \
         && ./configure --enable-encoding=no --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch szip-stamp
 }
 
@@ -210,8 +210,8 @@ function build_hdf5 {
     fetch_unpack $hdf5_url/hdf5-$short/hdf5-$HDF5_VERSION/src/hdf5-$HDF5_VERSION.tar.gz
     (cd hdf5-$HDF5_VERSION \
         && ./configure --with-szlib=$BUILD_PREFIX --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch hdf5-stamp
 }
 
@@ -223,8 +223,8 @@ function build_libaec {
     fetch_unpack https://gitlab.dkrz.de/k202009/libaec/uploads/48398bd5b7bc05a3edb3325abfeac864/${tar_name}
     (cd $root_name \
         && ./configure --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch libaec-stamp
 }
 
@@ -234,7 +234,7 @@ function build_blosc {
     fetch_unpack https://github.com/Blosc/c-blosc/archive/v${BLOSC_VERSION}.tar.gz
     (cd c-blosc-${BLOSC_VERSION} \
         && $cmake -DCMAKE_INSTALL_PREFIX=$BUILD_PREFIX . \
-        && make install)
+        && make -j4 install)
     if [ -n "$IS_OSX" ]; then
         # Fix blosc library id bug
         for lib in $(ls ${BUILD_PREFIX}/lib/libblosc*.dylib); do
@@ -253,8 +253,8 @@ function build_lzo {
     fetch_unpack http://www.oberhumer.com/opensource/lzo/download/lzo-${LZO_VERSION}.tar.gz
     (cd lzo-${LZO_VERSION} \
         && ./configure --prefix=$BUILD_PREFIX --enable-shared \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch lzo-stamp
 }
 
@@ -276,8 +276,8 @@ function build_curl {
         && if [ -z "$IS_OSX" ]; then \
         LIBS=-ldl ./configure $flags; else \
         ./configure $flags; fi\
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch curl-stamp
 }
 
@@ -301,8 +301,8 @@ function build_openssl {
     check_sha256sum $ARCHIVE_SDIR/${OPENSSL_ROOT}.tar.gz ${OPENSSL_HASH}
     (cd ${OPENSSL_ROOT} \
         && ./config no-ssl2 no-shared -fPIC --prefix=$BUILD_PREFIX \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch openssl-stamp
 }
 
@@ -313,7 +313,7 @@ function build_netcdf {
     fetch_unpack https://github.com/Unidata/netcdf-c/archive/v${NETCDF_VERSION}.tar.gz
     (cd netcdf-c-${NETCDF_VERSION} \
         && ./configure --prefix=$BUILD_PREFIX --enable-dap \
-        && make \
-        && make install)
+        && make -j4 \
+        && make -j4 install)
     touch netcdf-stamp
 }
