@@ -78,8 +78,8 @@ function build_multilinux {
     [ -z "$plat" ] && echo "plat not defined" && exit 1
     local build_cmds="$2"
     local docker_image=quay.io/pypa/manylinux1_$plat
-    retry docker pull $docker_image
-    docker run --rm \
+    time retry docker pull $docker_image
+    time docker run --rm \
         -e BUILD_COMMANDS="$build_cmds" \
         -e PYTHON_VERSION="$MB_PYTHON_VERSION" \
         -e UNICODE_WIDTH="$UNICODE_WIDTH" \
@@ -108,8 +108,8 @@ function install_run {
     local plat=${1:-$PLAT}
     bitness=$([ "$plat" == i686 ] && echo 32 || echo 64)
     local docker_image="matthewbrett/trusty:$bitness"
-    docker pull $docker_image
-    docker run --rm \
+    time docker pull $docker_image
+    time docker run --rm \
         -e PYTHON_VERSION="$MB_PYTHON_VERSION" \
         -e MB_PYTHON_VERSION="$MB_PYTHON_VERSION" \
         -e UNICODE_WIDTH="$UNICODE_WIDTH" \
